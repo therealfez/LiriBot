@@ -2,6 +2,7 @@ require("dotenv").config();
 var Spotify = require("node-spotify-api");
 var keys = require("./keys.js");
 var axios = require("axios");
+var moment = require("moment");
 var fs = require("fs");
 var spotify = new Spotify(keys.spotify);
 
@@ -11,10 +12,16 @@ function searchApi(command) {
             const artist = encodeURI(process.argv.slice(3).join("%20"));
             axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp")
                 .then(function (response) {
+                    for(var i = 0; i <response.data.length; i++) {
                     console.log(`
-                    Venue: ${response.data[0].venue.name}
-                    Location: ${response.data[0].venue.city} ${response.data[0].venue.region}, ${response.data[0].venue.country}
-                    Date: ${response.data[0].datetime}`)
+                    Venue: ${response.data[i].venue.name}
+                    Location: ${response.data[i].venue.city} ${response.data[i].venue.region}, ${response.data[i].venue.country}
+                    Date: ${moment(response.data[i].datetime, 'YYYY-MM-DDTHH:mm:ss').format('MM/DD/YYYY, h:mm A')}
+                    
+
+=====================================================================================================================
+                    `)
+                    }
                 })
             break;
         case 'spotify-this-song':
